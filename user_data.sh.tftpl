@@ -1,0 +1,7 @@
+#!/bin/bash
+
+apt-get update
+# TODO bench against running in container (--network host)?
+apt-get install nginx -y
+
+# TODO register with load balancer's target group

@@ -1,0 +1,38 @@
+- ~~try it in release~~
+- ~~try it in release on ubuntu with systemd (type=notify)~~
+
+```ini
+[Unit]
+Description=testing sup
+Wants=network.target
+After=network-online.target
+
+[Service]
+; Type=simple doesn't seem to work, or maybe elixir is not trapping sigterm?
+Type=notify
+; Environment="TG_BOT_KEY=..."
+; Environment="TG_ROOM_ID=..."
+; Environment="AWS_ACCESS_KEY_ID=..."
+; Environment="AWS_SECRET_ACCESS_KEY=..."
+Environment="HOME=/opt/sup"
+WorkingDirectory=/opt/sup
+ExecStart=/opt/sup/bin/sup start
+WatchdogSec=10s
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+- ~~try autoscaling group with/without lb config, can still use lb health checks?~~
+- ~~register with lb~~ that ...
+- ~~register/deregister with lb in app startup/shutdown~~ ... and that are no longer relevant
+- register/deregister, turn off nginx, does still mark unhealthy?
+- deregister, do requests still go to that instance?
+- script ssh restarts
+
+- try it in container
+- try it in container managed by systemd (podman,type=fork)
+
+```ini
+```
