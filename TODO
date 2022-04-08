@@ -29,10 +29,22 @@ WantedBy=multi-user.target
 - ~~register/deregister with lb in app startup/shutdown~~ ... and that are no longer relevant
 - ~~register/deregister, turn off nginx, does still mark unhealthy?~~ yes, but with a long delay
 - ~~deregister, do requests still go to that instance?~~ yes, even with 0s deregistration delay
+
 - script ssh restarts
 
+```sh
+> mix deploy
+# lists instances
+# connects to each in turn
+# deregisters the instance from elb
+# updates nginx conf
+# systemctl restart nginx
+# registers the instance with elb
+```
+
 - try it in container
-- try it in container managed by systemd (podman,type=fork)
+- try it in container managed by systemd (podman,type=fork), as good as type=notify?
+- bench against uncontainerized
 
 ```ini
 ```

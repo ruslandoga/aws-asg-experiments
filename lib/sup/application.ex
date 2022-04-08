@@ -10,8 +10,8 @@ defmodule Sup.Application do
     children = [
       {Task.Supervisor, name: S.task_sup()},
       {Finch, name: S.finch()},
-      Supervisor.child_spec({Sup.Worker, name: :worker1}, id: :worker1),
-      Supervisor.child_spec({Sup.Worker, name: :worker2}, id: :worker2),
+      Supervisor.child_spec({Sup.Worker, name: :db}, id: :worker1),
+      Supervisor.child_spec({Sup.Worker, name: :web}, id: :worker2),
       :systemd.ready()
     ]
 

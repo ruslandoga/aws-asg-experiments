@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# https://github.com/containers/buildah/blob/main/docs/tutorials/01-intro.md
+
+echo 'Starting builder build'
+builder=$(buildah from docker.io/hexpm/elixir:1.13.4-erlang-24.3.3-alpine-3.15.3)
+
+# TODO cache
+buildah run $builder apk add --nocache --update git build-base
+buildah run $builder mkdir /app
+
+buildah config --workingdir /app $builder
+buildah config --env MIX_ENV=prod $builder
+
+buildah run $builder mix local.hex --force
+buildah run $builder mix local.rebar --force
+
+buildah copy $builder mix.exs mix.lock ./
+buildah copy $builder config lib ./
+
+# TODO cache
+buildah run $builder mix deps.get
+buildah run $builder mix deps.compile
+buildah run $builder mix compile
+buildah run $builder mix release
+# https://www.redhat.com/sysadmin/buildah-unshare-command
+buildermount=$(buildah mount $builder)
+echo '$buildermount=' $buildermount 
+
+echo 'Starting app build'
+app=$(buildah from docker.io/alpine:3.15.3)
+
+# TODO cache
+buildah run $app apk add --no-cache --update bash openssl libgcc libstdc++
+
+buildah run $app mkdir /app
+buildah run $app chown nobody:nobody /app
+buildah config --env HOME=/app $app
+buildah config --user nobody:nobody $app
+appmount=$(buildah mount $app)
+echo '$appmount=' $appmount
+
+cp -r $buildermount/app/_build/prod/rel/sup $appmount/
+
+# CMD /app/bin/t start
