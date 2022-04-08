@@ -73,8 +73,7 @@ resource "aws_launch_template" "ruslan" {
   instance_initiated_shutdown_behavior = "terminate"
 
   vpc_security_group_ids = [
-    data.aws_security_group.default.id,
-    "sg-08607d7cb08133b40"
+    data.aws_security_group.default.id
   ]
 
   # credit_specification {
@@ -229,6 +228,7 @@ resource "aws_lb_target_group" "nginx" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
     interval            = 5
+    timeout             = 2
     path                = "/"
   }
 }

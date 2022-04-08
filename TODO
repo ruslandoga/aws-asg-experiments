@@ -24,11 +24,11 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-- ~~try autoscaling group with/without lb config, can still use lb health checks?~~
+- ~~try autoscaling group with/without lb config, can still use lb health checks?~~ no, even though ELB shows enabled
 - ~~register with lb~~ that ...
 - ~~register/deregister with lb in app startup/shutdown~~ ... and that are no longer relevant
-- register/deregister, turn off nginx, does still mark unhealthy?
-- deregister, do requests still go to that instance?
+- ~~register/deregister, turn off nginx, does still mark unhealthy?~~ yes, but with a long delay
+- ~~deregister, do requests still go to that instance?~~ yes, even with 0s deregistration delay
 - script ssh restarts
 
 - try it in container
